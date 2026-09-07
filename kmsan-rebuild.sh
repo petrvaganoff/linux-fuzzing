@@ -1,0 +1,130 @@
+#!/bin/bash
+
+set -e
+
+make CC=clang defconfig
+make CC=clang kvm_guest.config
+
+./scripts/config \
+  -e KMSAN \
+  -e KMSAN_CHECK_PARAM_RETVAL \
+  -e PREEMPT_NONE \
+  -d PREEMPT \
+  -d HYPERV \
+  -d VMAP_STACK \
+  -d MTD \
+  -d SND_HDA_INTEL \
+  -d HARDENED_USERCOPY \
+  -d HARDENED_USERCOPY_FALLBACK \
+  -e UNWINDER_FRAME_POINTER \
+  -e FRAME_POINTER \
+  -e UNWINDER_ORC \
+  -e IKCONFIG \
+  -e CONFIGFS_FS \
+  -e SECURITYFS \
+  -e KCOV \
+  -e KCOV_ENABLE_COMPARISONS \
+  -e KCOV_INSTRUMENT_ALL \
+  -e FAULT_INJECTION \
+  -e FAULT_INJECTION_DEBUG_FS \
+  -e FAULT_INJECTION_USERCOPY \
+  -e FAILSLAB \
+  -e FAIL_PAGE_ALLOC \
+  -e FAIL_MAKE_REQUEST \
+  -e FAIL_IO_TIMEOUT \
+  -e FAIL_FUTEX \
+  --set-val RCU_CPU_STALL_TIMEOUT 100 \
+  -e DEBUG_INFO \
+  -e USB_DUMMY_HCD \
+  -e PVH \
+  -e KALLSYMS \
+  -e KALLSYMS_ALL \
+  -e CMDLINE_BOOL \
+  --set-val CMDLINE_OVERRIDE n \
+  -e TUN \
+  -e MAC80211_HWSIM \
+  --set-val IEEE802154_FAKELB n \
+  -e IEEE802154_HWSIM \
+  -e CONFIG_USB_RAW_GADGET \
+  -e BT_HCIVHCI \
+  -e GDB_SCRIPTS \
+  --set-val DEBUG_INFO_REDUCED n \
+  --set-val DEBUG_INFO_COMPRESSED n \
+  --set-val RANDOMIZE_BASE n \
+  --set-val DEBUG_INFO_SPLIT n \
+  -e DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT \
+  --set-val DEBUG_INFO_BTF n \
+  --set-str CMDLINE "earlyprintk=serial net.ifnames=0 sysctl.kernel.hung_task_all_cpu_backtrace=1 ima_policy=tcb nf-conntrack-ftp.ports=20000 nf-conntrack-tftp.ports=20000 nf-conntrack-sip.ports=20000 nf-conntrack-irc.ports=20000 nf-conntrack-sane.ports=20000 binder.debug_mask=0 rcupdate.rcu_expedited=1 no_hash_pointers page_owner=on sysctl.vm.nr_hugepages=4 sysctl.vm.nr_overcommit_hugepages=4 secretmem.enable=1 root=/dev/sda console=ttyS0 vsyscall=native numa=fake=2 kvm-intel.nested=1 spec_store_bypass_disable=prctl nopcid vivid.n_devs=16 vivid.multiplanar=1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2 netrom.nr_ndevs=16 rose.rose_ndevs=16 dummy_hcd.num=8 watchdog_thresh=55 workqueue.watchdog_thresh=140 sysctl.net.core.netdev_unregister_timeout_secs=140 sysctl.max_rcu_stall_to_panic=1 msr.allow_writes=off smp.csd_lock_timeout=100000 kmsan.panic=1" \
+  -d PARAVIRT_SPINLOCKS \
+  -d PARAVIRT_DEBUG \
+  -d CPU_IDLE_GOV_HALTPOLL \
+  -d BPF_JIT \
+  -d MTD_BLOCK \
+  -d FTL \
+  -d MTD_SLRAM \
+  -d MTD_PHRAM \
+  -d MTD_MTDRAM \
+  -d MTDRAM_TOTAL_SIZE \
+  -d MTDRAM_ERASE_SIZE \
+  -d MTD_BLOCK2MTD \
+  -d MTD_UBI \
+  -d SND_HDA_HWDEP \
+  -d SND_HDA_INPUT_BEEP \
+  -d SND_HDA_PATCH_LOADER \
+  -d SND_HDA_CODEC_REALTEK \
+  -d SND_HDA_CODEC_ANALOG \
+  -d SND_HDA_CODEC_SIGMATEL \
+  -d SND_HDA_CODEC_VIA \
+  -d SND_HDA_CODEC_HDMI \
+  -d SND_HDA_CODEC_CIRRUS \
+  -d SND_HDA_CODEC_CONEXANT \
+  -d SND_HDA_CODEC_CA0110 \
+  -d SND_HDA_CODEC_CA0132 \
+  -d SND_HDA_CODEC_CMEDIA \
+  -d SND_HDA_CODEC_SI3054 \
+  -d UBIFS_FS \
+  -d UBIFS_FS_ADVANCED_COMPR \
+  -d UBIFS_ATIME_SUPPORT \
+  -d UBIFS_FS_LZO \
+  -d UBIFS_FS_ZLIB \
+  -d UBIFS_FS_ZSTD \
+  -d UBIFS_FS_SECURITY \
+  -d CRYPTO_AEGIS128_AESNI_SSE2 \
+  -d CRYPTO_NHPOLY1305_SSE2 \
+  -d CRYPTO_NHPOLY1305_AVX2 \
+  -d CRYPTO_CRC32C_INTEL \
+  -d CRYPTO_CRC32_PCLMUL \
+  -d CRYPTO_CRCT10DIF_PCLMUL \
+  -d CRYPTO_SHA1_SSSE3 \
+  -d CRYPTO_SHA256_SSSE3 \
+  -d CRYPTO_SHA512_SSSE3 \
+  -d CRYPTO_GHASH_CLMUL_NI_INTEL \
+  -d CRYPTO_AES_NI_INTEL \
+  -d CRYPTO_BLOWFISH_X86_64 \
+  -d CRYPTO_CAMELLIA_AESNI_AVX2_X86_64 \
+  -d CRYPTO_CAST5_AVX_X86_64 \
+  -d CRYPTO_CAST6_AVX_X86_64 \
+  -d CRYPTO_DES3_EDE_X86_64 \
+  -d CRYPTO_SERPENT_SSE2_X86_64 \
+  -d CRYPTO_SERPENT_AVX2_X86_64 \
+  -d CRYPTO_TWOFISH_AVX_X86_64 \
+  -d JFFS2_FS \
+  -d JFFS2_FS_DEBUG \
+  -d JFFS2_FS_WRITEBUFFER \
+  -d JFFS2_SUMMARY \
+  -d JFFS2_FS_XATTR \
+  -d JFFS2_FS_POSIX_ACL \
+  -d JFFS2_FS_SECURITY \
+  -d JFFS2_COMPRESSION_OPTIONS \
+  -d JFFS2_ZLIB \
+  -d JFFS2_LZO \
+  -d JFFS2_RTIME \
+  -d JFFS2_RUBIN \
+  -d JFFS2_CMODE_PRIORITY \
+  -d CRAMFS_MTD \
+  -d ROMFS_BACKED_BY_BOTH \
+  -d ROMFS_ON_MTD
+
+make CC=clang olddefconfig
+
+make CC=clang KCFLAGS="-g -fno-omit-frame-pointer" -j$(nproc)
